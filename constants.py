@@ -11,12 +11,12 @@ INTENTS = [
 ]
 
 kingdoms = [
-    Kingdom('owl', 'Kingdom Air'),
-    Kingdom('octopus', 'Kingdom Water'),
-    Kingdom('panda', 'Kingdom Land'),
-    Kingdom('gorilla', 'Kingdom Space'),
-    Kingdom('mammoth', 'Kingdom Ice'),
-    Kingdom('dragon', 'Kingdom Fire'),
+    Kingdom('owl', 'Air'),
+    Kingdom('octopus', 'Water'),
+    Kingdom('panda', 'Land'),
+    Kingdom('gorilla', 'Space'),
+    Kingdom('mammoth', 'Ice'),
+    Kingdom('dragon', 'Fire'),
     Kingdom('', 'Kingdom Shan'),
 ]
 
@@ -26,7 +26,8 @@ winning_messages = {
     'gorilla': ["Go, risk it all"],
     'owl': ["oaaawaala", "Let’s swing the sword together"],
     'octopus': ["Sphinx of black quartz, judge my dozen vows"],
-    'mammoth': ["Ahoy! Fight for me with men and money", "zmzmzmzaztzozh"]
+    'mammoth': ["Ahoy! Fight for me with men and money", "zmzmzmzaztzozh"],
+    '': ['shan']
 }
 
 random_messages = [

@@ -10,7 +10,46 @@ from gateways.ruler_gateway import RulerInMemoryGateway
 from views.query_view import QueryView
 
 
-def run():
+def run_ballot_system(query_view, kingdom_gateway, ruler_gateway):
+    participant_kingdoms = str(input(
+        'Please Enter the kingdoms competing to be the ruler: ')).strip().split(' ')
+    kingdom_entities = []
+    for participant_kingdom in participant_kingdoms:
+        kingdom_entity = kingdom_gateway.get_kingdom_by_name(participant_kingdom)
+        kingdom_entities.append(kingdom_entity)
+        ruler_gateway.add_ruler(kingdom_entity)
+    round_count = 0
+    while True:
+        round_count += 1
+        ruler_gateway.kingdom_allies = []
+        for kingdom_entity in kingdom_entities:
+            ruler_gateway.add_ruler(kingdom_entity)
+
+        for kingdom_entity in kingdom_entities:
+            # print()
+            # print('Messages from ', str(kingdom_entity), '......')
+            for kingdom in constants.kingdoms:
+                random_message = random.choice(constants.random_messages)
+                if kingdom.name.lower() == kingdom_entity.name.lower():
+                    continue
+                # print(str(kingdom) + ", " + random_message)
+                query_view.post('send', kingdom_entity, kingdom, random_message)
+        print()
+        print('Results after round {} ballot count'.format(round_count))
+        for kingdom_entity in kingdom_entities:
+            ruler = ruler_gateway.get_kingdom(kingdom_entity)
+            allies_count = 0
+            if ruler:
+                allies_count = len(ruler.allies)
+            print("Allies for {}: {}".format(kingdom_entity.name, allies_count))
+        winners = ruler_gateway.get_max_allies_rulers()
+        if len(winners) > 1:
+            kingdom_entities = [winner.kingdom for winner in winners]
+            continue
+        return
+
+
+def run(ruler_system=''):
     kingdoms = constants.kingdoms
     kingdom_gateway = KingdomInMemoryGateway(kingdoms)
     ruler_gateway = RulerInMemoryGateway(None)
@@ -31,6 +70,9 @@ def run():
             print([str(k) for k in kingdom_gateway.kingdoms])
             print([str(kl) for kl in ruler_gateway.kingdom_allies])
         if message == 'chicken':
+            if ruler_system == 'ballot':
+                run_ballot_system(query_view, kingdom_gateway, ruler_gateway)
+                continue
             ruler_kingdom = Kingdom('', 'Kingdom Shan')
             for kingdom in constants.kingdoms:
                 if kingdom.name.lower() == ruler_kingdom.name.lower():
@@ -41,4 +83,4 @@ def run():
                 print(str(kingdom) + ", " + winning_message)
                 query_view.post("send", ruler_kingdom, kingdom, winning_message)
             continue
-        print(query_view.post(message))
+        print(query_view.post(message, system=ruler_system))
