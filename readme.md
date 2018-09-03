@@ -3,7 +3,7 @@
 ##### To start app, run following command
 ``python app.py``
 
-##### To start app using ballot system, run following command
+##### To start app using ballot system(for problem 2), run following command
 ``python app.py console ballot``
 
 Now start asking question or enter commands.
